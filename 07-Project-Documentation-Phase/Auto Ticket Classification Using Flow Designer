@@ -1,0 +1,297 @@
+PROJECT DOCUMENTATION
+ AUTO TICKET CLASSIFICATION USING FLOW DESIGNER
+Problem Statement
+The school IT helpdesk receives multiple incident requests daily from students and teachers, such as Wi-Fi issues, projector failures, password problems, and slow computers.
+ Currently, IT staff manually reviews each request and assigns a category, which is time-consuming and inefficient.
+This project automates ticket classification using ServiceNow Flow Designer by analyzing keywords in the incident’s short description and description fields.
+Objective
+•	Automatically classify incidents at the time of creation.
+•	Reduce manual effort for IT agents.
+•	Improve ticket routing efficiency.
+•	Implement a no-code, easily maintainable solution.
+PHASE 1: Requirement Analysis & Planning
+The school IT helpdesk receives multiple support requests daily from students and teachers related to common issues such as network connectivity, hardware failures, account access problems, and system performance issues.
+Currently, IT staff manually review each ticket to:
+•	Identify the issue type.
+•	Select the correct category and subcategory.
+•	Inform the caller about ticket creation.
+
+This manual process is time-consuming, error-prone, and not scalable as the number of requests increases.
+
+Activity : 1 Business Use Case.
+Business Requirements
+The system must:
+•	Automatically classify IT tickets based on the issue description.
+•	Assign both Category and Subcategory without manual intervention.
+•	Support dependent choice logic between Category and Subcategory.
+•	Send an automated email notification to the caller upon ticket creation.
+•	Store ticket information in a structured and standardized format.
+•	Ensure easy maintenance and future scalability.
+Activity : 2 Creation of New Update Set.
+Navigation Steps : 
+•	Go to All menus → Search for Update set.
+•	Under System Update Sets → Select Local Update Sets.
+•	Click the New button on the top right corner of the page.
+•	Name : Project Update Set.
+•	State : In progress.
+•	Application : Global.
+•	Then Save the Form.
+•	Under Related links Click on the Make This My Current Set.
+•	Then the Created Update Set will appear as Current.
+
+Activity : 3 Navigation steps in Picture View.
+
+ 
+ 
+
+
+  
+
+Phase :- 2 Backend Development &  Configuration
+Activity 1 : Creation of Custom Table to Store Ticket Records.
+Steps to Create Custom Table
+•	Open All menus → Search for Tables.
+•	Under System Definition → Click Tables.
+•	On the top right corner Click New button.
+•	Label : Incident WorkFlow.
+•	Uncheck the Create module.
+•	Now Save the Form.
+•	Then Click the Controls Suction and Enable the Check box true Auto Number.
+•	Now again save the Form.
+
+ 
+
+
+ 
+ 
+ 
+
+ 
+•	Then Save the Form and Under Related Links Click Show Form.
+•	Now Open the Configure On clicking the Context Menu and then Open the Form Designer.
+•	Then Create Fields as Required.
+Activity 2: Field Creation and Data Type Configuration
+The objective of this milestone is to create all required fields in the School IT Ticket table with correct data types, choices, and dependencies, ensuring structured and consistent data capture.
+
+Field Label	Type	Reference/Choice
+Number	Auto Number	—
+Caller	Reference	sys_user
+Category	Choice	[Network,Hardware,Access, Performance]
+Subcategory	Choice	[Wi-Fi,Projector,Forgot Password,Slow Compter]
+Short Description	String	–
+Description	String	–
+State	Choice	[New,In progress,On hold,Resolved,Closed]
+Assigned Group	Reference	sys_user_group
+Assigned to	Reference	sys_user
+
+
+•	After Creating Fields with their appropriate Type, then add the Choice from the Form design.
+•	To all the Choice list Fields.
+•	They are Category,Subcategory and State.
+
+ 
+ 
+
+ 
+•	Same like that, add Choice to the State field.
+•	Then Click the save button on the top right corner.
+•	Open the Form and reload it.
+Activity 3 : Implementing Dependency Between Category and Subcategory Choice Fields
+
+The objective of this milestone is to implement a dependency relationship between the Category and Subcategory fields so that the available Subcategory options dynamically change based on the selected Category.
+
+Navigation Steps : 
+•	Open the Created Table Form and Right click on the Subcategory Field.
+•	Click on the Configure Dictionary.
+•	Under Related links Click on the Advanced view,
+•	Then select the Dependent Field Section.
+•	Enable the checkbox Use dependent field true.
+•	Then select the Field Category on the Dependent on field.
+•	Then save the Form.
+ 
+
+ 
+
+ 
+
+•	Now scroll down to the choice section.
+•	Then add the dependent fields for which option dependent on the category gives the category choice backend name to the subcategory choice values.
+•	Wi-Fi                    → Network.
+•	Projector               → Hardware.
+•	Forgot password   → Access.
+•	Slow computer     → Performance.
+ 
+
+•	Then save the Form.
+•	Then it will display each choice to each one separately based on the category subcategory displays.
+ 
+
+
+
+ 
+
+ 
+
+Milestone 3 : Automation using Flow Designer & Email Notification.
+
+When a student creates a new IT support ticket, they only need to enter the Caller Name and Short Description of the issue. The student does not need to manually select the Category or Subcategory. Once the ticket is submitted, a Flow Designer automation is triggered and evaluates the Short Description for predefined keywords such as WiFi, Projector, Password, or Slow. Based on the identified keyword, the flow automatically assigns the appropriate Category and Subcategory to the ticket. 
+•	If the short description contains the word WiFi, the flow assigns Category = Network and Subcategory = WiFi.
+•	If the description contains Projector, the flow assigns Category = Hardware and Subcategory = Projector.
+•	If the description includes Password or Login, the flow assigns Category = Access and Subcategory = Forgot Password.
+•	If the description mentions Slow or Hanging, the flow assigns Category = Performance and Subcategory = Slow Computer.
+
+This automation ensures consistent classification, eliminates human error, and significantly reduces the manual effort required by IT staff. 
+The entire process is implemented using Flow Designer, making the solution easy to maintain, scalable, and completely no-code.
+
+Activity : 1 Auto Classification using Flow design.
+•	Go to All menus → Search Flow designer.
+•	Under Process Automation Open the Flow designer.
+•	On the top right corner Click New and Select Flow Option.
+•	Name  : Auto Classify School IT Tickets.
+•	Application : Global.
+ 
+
+ 
+Activity : 2 Trigger Configuration.
+
+
+•	Trigger   : Record Created.
+•	Table      : Incident Workflow.
+•	Condition : Category is Empty.
+•	Then Click Done.
+ 
+
+ 
+
+Activity : 3 Wi-Fi Issue Classification.
+•	Select If condition.
+•	Condition label : SD is Wifi or Network (Give as ur wish).
+•	Condition 1       : Using data pill picker Select Short description as Field , and operator Contains , Value is Wi-Fi.
+•	Condition 2       : Using data pill picker Select Short description as Field, and Operator is Contains, Value is Network.
+•	Then Click Done Button.
+
+ 
+
+ 
+
+Activity : 4 Projector Issue Classification.
+•	Now Select the Else If Condition.
+•	Condition label  : SD is Projector or Hardware.
+•	Condition     : Short description Contains Prajector.
+•	Then Click the Done button.
+•	Now Action is an Update record.
+•	Set Category = Hardware.
+
+
+ 
+•	Set Subcategory = Projector.
+ 
+
+Activity : 5 Password Issue Classification.
+•	Now again select Else If condition.
+•	Condition label  : SD is Forgot password.
+•	Condition    : Short description contains Forgot password.
+•	Then Click the Done button.
+•	Now Action is an Update Record.
+•	Set Category = Access.
+•	Set Subcategory = Forgot Password.
+•	Then Click the Done button.
+
+ 
+
+ 
+Activity : 6 Slow Computer Classification.
+
+
+•	Now Again Click the Else If Condition.
+•	Condition label  : SD is Performance.
+•	Condition    : Short description contains Slow Computer.
+•	Then Click the Done button.
+•	Now Action is an Update Record.
+•	Set Category = Performance.
+•	Set Subcategory = Slow computer.
+•	Then Click the Done button.
+ 
+
+ 
+
+Activity : 7 Email Action Setup.
+
+
+•	After classification, an email notification is sent using Flow Designer.
+•	Set Action Send Email.
+•	To            : Caller → Email.
+•	Subject    : Your Request for the issue has been submitted.
+•	Body       : Ticket confirmation message.
+•	Then Click the Done button.
+ 
+
+•	Now Click the Activate button from the top right corner.
+
+PHASE  6 : Testing, Validation & Security.
+•	The objective of Phase 4 is to ensure that the developed solution works as expected, meets all functional requirements, and follows basic security and access control best practices.
+•	This phase validates the end-to-end automation, confirms data accuracy, and ensures that only authorized users can access or modify ticket data.
+Data Validation Checks
+•	Mandatory fields captured correctly.
+•	Auto-number generated without duplication.
+•	Category and Subcategory values stored accurately.
+•	Reference fields resolve correctly to user and group tables.
+
+ Activity : 1 Testing & Validation.
+Test Scenario 1
+•	Enter one Caller Name.
+•	Short Description: WiFi not working in library
+•	Then Save the Form.
+•	And Reload the Form.
+•	Then it fills auto as : 
+•	Category → Network.
+•	Subcategory → WiFi.
+•	Email sent to caller Email Id.
+ 
+
+ 
+Activity : 2 Check Email Notification.
+•	Open All menus → Search Emails.
+•	Under System logs → Select Emails.
+•	Search with the Given Subject Name.
+•	Open that Record and Under Related Links Click Preview mail Option.
+ 
+ 
+
+ 
+
+Activity : 3 Test Scenario 2
+•	Enter one Caller Name.
+•	Short Description: Projector not turning on.
+•	Then Save the Form.
+•	And Reload the Form.
+•	Then it fills auto as : 
+•	Category → Hardware.
+•	Subcategory → Projector.
+•	Then Email sent to caller Mail id.
+ 
+
+ PHASE 5: Deployment & Final Documentation.
+•	The objective of Phase 4 is to deploy the developed solution to the target environment and finalize all project documentation.
+•	This phase ensures that the solution is stable, reusable, and ready for demonstration or production use, along with complete and clear documentation for future reference.
+Activity : 1 Make Update set to Complete State.
+•	Go to All menus → Search For Local Update Sets.
+•	Under System Update sets Select → Local Update sets.
+•	Open the Project Update set.
+•	Make the State From In progress to Complete.
+•	Then Save the Form.
+•	Under Related links Click Export to XML Option.
+•	Then the Xml Format the Update set data will be downloaded to your system.
+•	We can share through WhatsApp or Mail that downloaded file.
+•	Then the Created Update set will transform to others in this way.
+ 
+
+ 
+
+ 
+Conclusion
+•	The Auto Ticket Classification using Flow Designer project successfully delivers a complete, end-to-end automation solution for a school IT helpdesk. The primary objective of reducing manual effort in ticket categorization and improving response efficiency has been fully achieved.
+•	Through structured requirement analysis, careful backend configuration, and no-code automation using Flow Designer, the system now automatically classifies IT tickets based on the short description provided by students. The implementation of dependent choice fields ensures data accuracy, while automated email notifications improve communication by instantly acknowledging ticket creation to the caller.
+•	The solution was developed using a phased approach, ensuring clarity, stability, and ease of maintenance. Comprehensive testing and security validation confirmed that the system functions reliably, maintains data integrity, and enforces appropriate access controls.
+•	Overall, this project demonstrates how ServiceNow can be effectively used to build scalable, maintainable, and user-friendly automation solutions without relying on complex scripting or machine learning. The design is well-suited for small to medium environments such as educational institutions and can be easily extended in the future to include advanced features like assignment automation, SLA tracking, or predictive intelligence.
+
